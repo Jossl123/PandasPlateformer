@@ -17,12 +17,24 @@ class Box:
         return self.collider.height
     
     def distance(self, box):
-        self_center = np.array(self.collider.center)
-        box_center = np.array(box.collider.center)
-        center_distance = np.linalg.norm(self_center - box_center)
-        
-        width_diff = self.collider.width + box.collider.width
-        height_diff = self.collider.height + box.collider.height
-        width_height_distance = max(0, center_distance - 0.5 * (width_diff + height_diff))
-        
-        return width_height_distance
+        x1_rect1, y1_rect1 = self.collider.topleft
+        x2_rect1, y2_rect1 = self.collider.bottomright
+
+        x1_rect2, y1_rect2 = box.collider.topleft
+        x2_rect2, y2_rect2 = box.collider.bottomright
+
+        if x2_rect1 < x1_rect2:  # rect1 is to the left of rect2
+            x_dist = x1_rect2 - x2_rect1
+        elif x1_rect1 > x2_rect2:  # rect1 is to the right of rect2
+            x_dist = x1_rect1 - x2_rect2
+        else:  # rect1 and rect2 overlap in x-axis
+            x_dist = 0
+
+        if y2_rect1 < y1_rect2:  # rect1 is above rect2
+            y_dist = y1_rect2 - y2_rect1
+        elif y1_rect1 > y2_rect2:  # rect1 is below rect2
+            y_dist = y1_rect1 - y2_rect2
+        else:  # rect1 and rect2 overlap in y-axis
+            y_dist = 0
+
+        return (x_dist ** 2 + y_dist ** 2) ** 0.5  # Euclidean distance
