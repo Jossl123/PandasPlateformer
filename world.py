@@ -9,11 +9,18 @@ class World:
         self.screen_offset = np.array((self.surface.get_width()/2, self.surface.get_height()/2))
         self.scale = 2
         self.floor_box = Box(-200, 50, 400, 200)
-        
+        self.background = pygame.image.load("images/background.png").convert_alpha()
+        self.background = pygame.transform.scale(self.background, (600*SCALE, 600*SCALE))
+        self.floor = pygame.image.load("images/floor.png").convert_alpha()
+        self.floor = pygame.transform.scale(self.floor, (600*SCALE, 100*SCALE))
+
     def update(self):
         self.manage_input()
         self.player.update(self.floor_box)
-        pygame.draw.rect(self.surface,(240,0,0), self.to_screen_coord(self.floor_box.collider))
+
+        #draw
+        self.surface.blit(self.background,(0,0))
+        self.surface.blit(self.floor,self.to_screen_coord(self.floor_box.collider))
         self.surface.blit(self.player.get_sprite(), self.to_screen_coord(self.player.collider.topleft))
 
     def manage_input(self):

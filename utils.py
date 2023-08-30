@@ -3,7 +3,7 @@ import pygame
 from math import *
 from box import Box
 BG = (0,100,0)
-SCALE = 2
+SCALE = 3
 def closest_point_on_line(line_point1, line_point2, point_p):
     line_direction = (line_point2[0] - line_point1[0], line_point2[1] - line_point1[1])
     line_length_squared = line_direction[0] ** 2 + line_direction[1] ** 2
