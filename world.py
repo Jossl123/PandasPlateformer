@@ -2,6 +2,7 @@ import pygame
 from utils import *
 from player import Player
 from box import Box
+from item import Item
 class World:
     def __init__(self, surface):
         self.surface = surface
@@ -13,15 +14,18 @@ class World:
         self.background = pygame.transform.scale(self.background, (600*SCALE, 600*SCALE))
         self.floor = pygame.image.load("images/floor.png").convert_alpha()
         self.floor = pygame.transform.scale(self.floor, (600*SCALE, 100*SCALE))
+        self.bamboo = Item("images/bamboo.png", self.floor_box.collider)
 
     def update(self):
         self.manage_input()
+        self.bamboo.update()
         self.player.update(self.floor_box)
 
         #draw
         self.surface.blit(self.background,(0,0))
         self.surface.blit(self.floor,self.to_screen_coord(self.floor_box.collider))
         self.surface.blit(self.player.get_sprite(), self.to_screen_coord(self.player.collider.topleft))
+        self.surface.blit(self.bamboo.get_sprite(), self.to_screen_coord(self.bamboo.collider.topleft))
 
     def manage_input(self):
         keys = pygame.key.get_pressed()
