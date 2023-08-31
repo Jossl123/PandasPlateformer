@@ -3,9 +3,9 @@ from utils import *
 from world import World
 from pygame.locals import *
 
-flags = DOUBLEBUF
+flags =  DOUBLEBUF 
 pygame.init()
-surface = pygame.display.set_mode((1920,1080),flags,32)
+surface = pygame.display.set_mode((16*100,9*100),flags,32)
 pygame.display.set_caption('Game')
 clock = pygame.time.Clock()
 world = World(surface)

@@ -2,7 +2,7 @@ import numpy as np
 import pygame
 from math import *
 BG = (0,100,0)
-SCALE = 10
+SCALE = 5
 def closest_point_on_line(line_point1, line_point2, point_p):
     line_direction = (line_point2[0] - line_point1[0], line_point2[1] - line_point1[1])
     line_length_squared = line_direction[0] ** 2 + line_direction[1] ** 2
