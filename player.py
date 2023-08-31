@@ -5,7 +5,7 @@ import pygame
 class Player(Box, Sprite):
     def __init__(self):
         Box.__init__(self,-10,-20,20,20)
-        Sprite.__init__(self,"images/idle.png",(20,20))
+        Sprite.__init__(self,"images/idle.png",(20,20),2)
         self.speed = 5
         self.acceleration = np.array([0,0.981*0.4])
         self.touching_floor = False
@@ -21,7 +21,8 @@ class Player(Box, Sprite):
     def update(self, box):
         self.velocity = self.velocity + self.acceleration
         self.velocity[0] = min(self.speed,max(-self.speed, self.velocity[0]))
-        collision = check_box_collision_path(self, box, self.velocity)
+        collision = self.check_box_collision_path(box, self.velocity)
         self.touching_floor = self.distance(box) == 0
         self.velocity*=collision
         self.collider.center+=self.velocity
+        self.velocity*=0.99

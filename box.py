@@ -38,3 +38,21 @@ class Box:
             y_dist = 0
 
         return (x_dist ** 2 + y_dist ** 2) ** 0.5  # Euclidean distance
+
+    def check_box_collision_path(self, box2, dir):
+        points_nb = np.linalg.norm(dir)*10
+        box1 = self
+        box1_pos = self.get_position()
+        i = 0
+        a = 0
+        new_box = box1
+        prev_distance = new_box.distance(box2)
+        while i < points_nb and prev_distance >= new_box.distance(box2):
+            a = (i/points_nb)
+            x = box1_pos[0] + dir[0] * a
+            y = box1_pos[1] + dir[1] * a
+            new_box = Box(x-box1.get_width()/2,y-box1.get_height()/2,box1.get_width(), box1.get_height())
+            if new_box.collider.colliderect(box2.collider):
+                return (max(i-1,0)/points_nb)
+            i+=1
+        return 1

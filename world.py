@@ -10,10 +10,9 @@ class World:
         self.surface = surface
         self.player = Player()
         self.screen_offset = np.array((self.surface.get_width()/2, self.surface.get_height()/2))
-        self.scale = 2
-        self.background = Sprite("images/background.png", (600,600), -2.9)
-        self.floor = Entity("images/floor.png", -200, 50, 600, 100)
-        self.bamboo = Item("images/bamboo.png", self.floor.collider)
+        self.background = Sprite("images/background.png", (600,600),1, -2.9)
+        self.floor = Entity("images/floor.png", 1,-200, 50, 600, 100)
+        self.bamboo = Item("images/bamboo.png",2, self.floor.collider)
 
     def draw(self):
         self.surface.blit(self.background.get_sprite(),self.to_screen_coord((-300,-300), self.background.z_index))
@@ -25,7 +24,7 @@ class World:
         self.manage_input()
         self.bamboo.update()
         self.player.update(self.floor)
-        
+
         self.draw()
 
     def manage_input(self):
