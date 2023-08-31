@@ -5,6 +5,7 @@ from box import Box
 from item import Item
 from sprite import Sprite
 from entity import Entity
+from bamboo import Bamboo
 class World:
     def __init__(self, surface):
         self.surface = surface
@@ -12,13 +13,13 @@ class World:
         self.screen_offset = np.array((self.surface.get_width()/2, self.surface.get_height()/2))
         self.background = Sprite("images/background.png", (600,600),1, -2.9)
         self.floor = Entity("images/floor.png", 1,-200, 50, 600, 100)
-        self.bamboo = Item("images/bamboo.png",2, self.floor.collider)
+        self.bamboo = Bamboo(self.floor)
 
     def draw(self):
         self.surface.blit(self.background.get_sprite(),self.to_screen_coord((-300,-300), self.background.z_index))
         self.surface.blit(self.floor.get_sprite(),self.to_screen_coord(self.floor.collider.topleft))
         self.surface.blit(self.player.get_sprite(), self.to_screen_coord(self.player.collider.topleft))
-        self.surface.blit(self.bamboo.get_sprite(), self.to_screen_coord(self.bamboo.collider.topleft))
+        self.bamboo.draw(self.surface, self.to_screen_coord)
 
     def update(self):
         self.manage_input()
