@@ -1,11 +1,9 @@
-from box import Box
-from sprite import Sprite
+from solidsprite import SolidSprite
 from utils import *
 import pygame
-class Player(Box, Sprite):
+class Player(SolidSprite):#should be an entity
     def __init__(self):
-        Box.__init__(self,-10,-20,20,20)
-        Sprite.__init__(self,"images/idle.png",(20,20),2)
+        super().__init__(-10,-20,20,20,0,0,20,20,"images/idle.png",2)
         self.speed = 5
         self.acceleration = np.array([0,0.981*0.4])
         self.touching_floor = False
@@ -14,9 +12,7 @@ class Player(Box, Sprite):
     def move(self, dir):
         self.acceleration[0] = dir[0]
     
-    def get_sprite(self):
-        frame = int(pygame.time.get_ticks()/500)%2
-        return Sprite.get_sprite(self,frame)
+    def get_frame(self):return int(pygame.time.get_ticks()/500)%2
     
     def update(self, box):
         self.velocity = self.velocity + self.acceleration
@@ -24,5 +20,5 @@ class Player(Box, Sprite):
         collision = self.check_box_collision_path(box, self.velocity)
         self.touching_floor = self.distance(box) == 0
         self.velocity*=collision
-        self.collider.center+=self.velocity
+        self.position.center+=self.velocity
         self.velocity*=0.99

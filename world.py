@@ -5,27 +5,29 @@ from box import Box
 from item import Item
 from sprite import Sprite
 from entity import Entity
+from solidsprite import SolidSprite
 from bamboo import Bamboo
 class World:
     def __init__(self, surface):
         self.surface = surface
         self.player = Player()
         self.screen_offset = np.array((self.surface.get_width()/2, self.surface.get_height()/2))
-        self.background = Sprite("images/background.png", (600,600),1, -2.9)
-        self.floor = Entity("images/floor.png", 1,-200, 50, 600, 100)
-        self.bamboo = Bamboo(self.floor)
+        self.sprites = [
+            Sprite(-300,-300,600,600,"images/background.png",1, -2.9),
+            SolidSprite(-200, 50, 600, 100,0, 0, 600, 100,"images/floor.png", 1,),
+            self.player
+        ]
+        # self.sprites.append(
+        #     Bamboo(self.sprites[-1]))
 
     def draw(self):
-        self.surface.blit(self.background.get_sprite(),self.to_screen_coord((-300,-300), self.background.z_index))
-        self.surface.blit(self.floor.get_sprite(),self.to_screen_coord(self.floor.collider.topleft))
-        self.surface.blit(self.player.get_sprite(), self.to_screen_coord(self.player.collider.topleft))
-        self.bamboo.draw(self.surface, self.to_screen_coord)
+        offset = self.player.get_position() * SCALE - self.screen_offset
+        for sprite in self.sprites:
+            sprite.draw_sprite(self.surface, offset)
 
     def update(self):
         self.manage_input()
-        self.bamboo.update()
-        self.player.update(self.floor)
-
+        self.player.update(self.sprites[1])
         self.draw()
 
     def manage_input(self):
@@ -40,15 +42,3 @@ class World:
         if keys[pygame.K_UP] or keys[pygame.K_z]:
             if self.player.touching_floor:self.player.velocity[1] = -5
     
-    def to_screen_coord(self, coord, z_index = 0):
-        scale = SCALE * (1 + z_index/10)
-        match type(coord):
-            case pygame.Rect:
-                res = coord.copy() 
-                res.width*=scale
-                res.height*=scale
-                res.center = coord.center - self.player.get_position()
-                res.center=(res.center[0]*scale+self.screen_offset[0],res.center[1]*scale+self.screen_offset[1])
-                return res
-            case _:
-                return (coord - self.player.get_position()) * np.array((scale,scale)) + self.screen_offset 
